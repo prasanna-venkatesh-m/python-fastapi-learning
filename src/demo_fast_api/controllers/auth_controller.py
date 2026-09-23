@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from demo_fast_api.services.auth_service import AuthService
 
 router = APIRouter(
@@ -6,8 +6,6 @@ router = APIRouter(
     tags=['Auth']
 )
 
-authService = AuthService()
-
 @router.get('/getaccesstoken')
-def get_access_token(username: str, password: str):
+def get_access_token(username: str, password: str, authService : AuthService = Depends(AuthService)):
     return authService.get_access_token(username, password)

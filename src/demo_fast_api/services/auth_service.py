@@ -4,6 +4,6 @@ from fastapi import HTTPException
 class AuthService:
 
     def get_access_token(self, username: str, password: str)-> str | None:
-        if username=='11' and password=='11':
+        if username=='1' and password=='1':
             return create_access_token(userId=username, role='ADMIN', userName='Admin User', department='IT', email='it@gmail.com')
         raise HTTPException(401, "Invalid Credentials")

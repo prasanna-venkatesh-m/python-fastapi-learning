@@ -9,30 +9,28 @@ router = APIRouter(
     dependencies=[Depends(authenticate)]
 )
 
-user_service = UserService()
-
 @router.get("/",response_model=list[UserResponse])
-def get_users():
+def get_users(user_service : UserService = Depends(UserService)):
     return user_service.get_users()
 
 @router.get("/{user_id}",response_model=UserResponse | None, dependencies=[Depends(authorize(["ADMIN"]))])
-def get_user(user_id: int):
+def get_user(user_id: int, user_service : UserService = Depends(UserService)):
     return user_service.get_user_by_id(user_id)
 
 @router.get("/profile", status_code=status.HTTP_201_CREATED)
-def get_my_profile(payload : dict = Depends(authenticate)):
+def get_my_profile(payload : dict = Depends(authenticate), user_service : UserService = Depends(UserService)):
     return user_service.get_user_by_id(payload.get("userId"))
 
 @router.post("/",response_model=UserResponse,status_code=status.HTTP_201_CREATED)
-def create_user(user: CreateUserRequest):
+def create_user(user: CreateUserRequest, user_service : UserService = Depends(UserService)):
     return user_service.create_user(user)
 
 
 @router.put("/{user_id}",response_model=UserResponse,)
-def update_user(user_id: int,user: UpdateUserRequest):
+def update_user(user_id: int,user: UpdateUserRequest, user_service : UserService = Depends(UserService)):
     return user_service.update_user(user_id, user)
 
 
 @router.delete("/{user_id}",status_code=status.HTTP_200_OK, dependencies=[Depends(authorize(["ADMIN"]))])
-def delete_user(user_id: int):
+def delete_user(user_id: int, user_service : UserService = Depends(UserService)):
     return user_service.delete_user(user_id)
