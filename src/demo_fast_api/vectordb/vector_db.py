@@ -31,11 +31,11 @@ class VectorDB:
 
         self.index = self.client.Index(self.index_name)
 
-    def insert_vectors(self, vectors : list[dict[str, Any]], namespace: str):
+    def insert_vectors(self, vectors : list[dict[str, Any]], namespace: str="documents"):
         return self.index.upsert(vectors=vectors, namespace=namespace)
 
     def search_vectors(self, query_vector : list[float], top_k : int = 5):
-        result = self.index.query(vector=query_vector, namespace="FAQ", top_k=top_k, include_metadata=True)
+        result = self.index.query(vector=query_vector, namespace="documents", top_k=top_k, include_metadata=True)
         return [
             {
                 "id": match["id"],
@@ -45,11 +45,15 @@ class VectorDB:
             for match in result["matches"]
         ]
 
-    def delete_namespace(self, namespace: str):
+    def delete_namespace(self, fileType: str):
         try:
             return self.index.delete(
-                        delete_all=True,
-                        namespace=namespace,
+                        namespace="documents",
+                        filter={
+                            "file_type":{
+                                "$eq": fileType
+                            }
+                        }
                     )
         except Exception as e:
             if "namespace not found" in str(e).lower():

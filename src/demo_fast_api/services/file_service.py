@@ -57,11 +57,11 @@ class FileService:
             })
         
         if(fileType in update_files_list):
-            self.vector_db.insert_vectors(vectors=vectors, namespace=fileType.name)
+            self.vector_db.insert_vectors(vectors=vectors)
             return True
 
-        self.vector_db.delete_namespace(namespace=fileType.name)
-        self.vector_db.insert_vectors(vectors=vectors, namespace=fileType.name)
+        self.vector_db.delete_namespace()
+        self.vector_db.insert_vectors(vectors=vectors)
         return True
 
     async def search_vectors(self, query: str):
