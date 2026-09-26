@@ -64,6 +64,13 @@ class FileService:
         self.vector_db.insert_vectors(vectors=vectors, namespace=fileType.name)
         return True
 
+    async def search_vectors(self, query: str):
+        embeddings = self.embedding_model.encode(
+                    query,
+                    normalize_embeddings=True
+                ).tolist()
+        return self.vector_db.search_vectors(embeddings, 10)
+
     def _extract_text(self, file_bytes : bytes, filename : str):
         extension = Path(filename).suffix.lower()
     

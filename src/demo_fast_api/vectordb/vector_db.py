@@ -34,6 +34,17 @@ class VectorDB:
     def insert_vectors(self, vectors : list[dict[str, Any]], namespace: str):
         return self.index.upsert(vectors=vectors, namespace=namespace)
 
+    def search_vectors(self, query_vector : list[float], top_k : int = 5):
+        result = self.index.query(vector=query_vector, namespace="FAQ", top_k=top_k, include_metadata=True)
+        return [
+            {
+                "id": match["id"],
+                "score": match["score"],
+                "metadata": match.get("metadata", {})
+            }
+            for match in result["matches"]
+        ]
+
     def delete_namespace(self, namespace: str):
         try:
             return self.index.delete(

@@ -11,3 +11,7 @@ async def upload_files(
     fileService : FileService = Depends(FileService)
 ) -> bool:
   return await fileService.upload_files(fileType, file)
+
+@router.get(path='/search-vector')
+async def search_query(query: str, fileService: FileService = Depends(FileService)):
+  return await fileService.search_vectors(query=query)
