@@ -60,7 +60,7 @@ class FileService:
             self.vector_db.insert_vectors(vectors=vectors)
             return True
 
-        self.vector_db.delete_namespace()
+        self.vector_db.delete_namespace(fileType=fileType.name)
         self.vector_db.insert_vectors(vectors=vectors)
         return True
 
