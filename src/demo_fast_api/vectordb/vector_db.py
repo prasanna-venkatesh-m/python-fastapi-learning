@@ -34,7 +34,7 @@ class VectorDB:
     def insert_vectors(self, vectors : list[dict[str, Any]], namespace: str="documents"):
         return self.index.upsert(vectors=vectors, namespace=namespace)
 
-    def search_vectors(self, query_vector : list[float], top_k : int = 5):
+    def search_vectors(self, query_vector : list[float], top_k : int = 5, score_threshold : float = 0.5):
         result = self.index.query(vector=query_vector, namespace="documents", top_k=top_k, include_metadata=True)
         return [
             {
@@ -43,6 +43,7 @@ class VectorDB:
                 "metadata": match.get("metadata", {})
             }
             for match in result["matches"]
+            if match["score"] >= score_threshold
         ]
 
     def delete_namespace(self, fileType: str):
