@@ -2,7 +2,7 @@ import jwt
 from datetime import timezone, timedelta, datetime
 
 SECRET_KEY='my_seceret_key'
-ACCESS_TOKEN_EXPIRY_IN_MINUTES=60
+ACCESS_TOKEN_EXPIRY_IN_MINUTES=15
 ALGORITHM='HS256'
 
 def create_access_token(userId: str, role: str, userName: str, department: str, email: str):
