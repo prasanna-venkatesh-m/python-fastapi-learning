@@ -9,12 +9,15 @@ from pathlib import Path
 import io
 from demo_fast_api.vectordb.vector_db import VectorDB
 
-class FileService:
-    def __init__(self):
-        self.vector_db = VectorDB()
-        self.embedding_model = SentenceTransformer(
+vector_db = VectorDB()
+embedding_model = SentenceTransformer(
             "sentence-transformers/all-MiniLM-L6-v2"
         )
+
+class FileService:
+    def __init__(self):
+        self.vector_db = vector_db
+        self.embedding_model = embedding_model
         
     async def upload_files(self, fileType : FileType, file : UploadFile):
         update_files_list = {FileType.FAQ, FileType.INFORMATION}
