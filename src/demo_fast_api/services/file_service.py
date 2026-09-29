@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from fastapi import File, UploadFile
 from demo_fast_api.dto.enums.file_type_enum import FileType
-from sentence_transformers import SentenceTransformer
+from sentence_transformers import SentenceTransformer, CrossEncoder
 from pypdf import PdfReader
 from docx import Document
 from pathlib import Path
@@ -14,10 +14,15 @@ embedding_model = SentenceTransformer(
             "sentence-transformers/all-MiniLM-L6-v2"
         )
 
+reranker_model = CrossEncoder(
+    "cross-encoder/ms-marco-MiniLM-L-6-v2"
+)
+
 class FileService:
     def __init__(self):
         self.vector_db = vector_db
         self.embedding_model = embedding_model
+        self.reranker_model = reranker_model
         
     async def upload_files(self, fileType : FileType, file : UploadFile):
         update_files_list = {FileType.FAQ, FileType.INFORMATION}
@@ -72,7 +77,30 @@ class FileService:
                     query,
                     normalize_embeddings=True
                 ).tolist()
-        return self.vector_db.search_vectors(embeddings, 10)
+        candidates = self.vector_db.search_vectors(embeddings, 10)
+
+        if not candidates:
+            return []
+
+        pairs = [
+            (
+                query,
+                candidate["metadata"].get("text", "")
+            )
+            for candidate in candidates
+        ]
+
+        scores = self.reranker_model.predict(pairs)
+
+        for candidate, score in zip(candidates, scores):
+            candidate["rerank_score"] = float(score)
+
+        candidates.sort(
+            key=lambda x : x["rerank_score"],
+            reverse=True
+        )
+        
+        return candidates
 
     def _extract_text(self, file_bytes : bytes, filename : str):
         extension = Path(filename).suffix.lower()
