@@ -1,9 +1,8 @@
 import jwt
 from datetime import timezone, timedelta, datetime
-
-SECRET_KEY='my_seceret_key'
-ACCESS_TOKEN_EXPIRY_IN_MINUTES=30
-ALGORITHM='HS256'
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 def create_access_token(userId: str, role: str, userName: str, department: str, email: str):
     payload = {
@@ -12,7 +11,7 @@ def create_access_token(userId: str, role: str, userName: str, department: str, 
         "role": role,
         "department": department,
         "email": email,
-        "exp": datetime.now(timezone.utc)+timedelta(minutes=ACCESS_TOKEN_EXPIRY_IN_MINUTES)
+        "exp": datetime.now(timezone.utc)+timedelta(minutes=int(os.getenv("ACCESS_TOKEN_EXPIRY_IN_MINUTES")))
     }
 
-    return jwt.encode(payload=payload,key=SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(payload=payload,key=os.getenv("SECRET_KEY"), algorithm=os.getenv("ALGORITHM"))
