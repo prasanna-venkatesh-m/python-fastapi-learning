@@ -9,6 +9,8 @@ authors = [
 requires-python = ">=3.14"
 dependencies = [
     "fastapi>=0.141.1",
+    "groq>=1.7.0",
+    "openai>=3.24.0",
     "pinecone>=10.0.0",
     "pyjwt>=2.14.0",
     "pypdf>=6.19.0",
