@@ -1,6 +1,7 @@
 from demo_fast_api.repository.user_repository import UserRepository
 from demo_fast_api.dto.user_dto import CreateUserRequest, UpdateUserRequest, UserResponse
 from demo_fast_api.models.user_model import User
+import uuid
 
 class UserService:
     def __init__(self):
@@ -29,15 +30,14 @@ class UserService:
             email = user.email
         )
 
-    def create_user(self, userData : CreateUserRequest) -> UserResponse | None:
-        all_users = self.userRepository.get_all_users()
+    async def create_user(self, userData : CreateUserRequest) -> UserResponse | None:
         user = User(
-            id = len(all_users)+1,
+            id = uuid.uuid4(),
             name = userData.name,
             email= userData.email
         )
 
-        created_user = self.userRepository.create_user(user)
+        created_user = await self.userRepository.create_user(user)
         return UserResponse(
             id = created_user.id,
             name = created_user.name,

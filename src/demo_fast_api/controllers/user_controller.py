@@ -22,8 +22,8 @@ def get_my_profile(payload : dict = Depends(authenticate), user_service : UserSe
     return user_service.get_user_by_id(payload.get("userId"))
 
 @router.post("/",response_model=UserResponse,status_code=status.HTTP_201_CREATED)
-def create_user(user: CreateUserRequest, user_service : UserService = Depends(UserService)):
-    return user_service.create_user(user)
+async def create_user(user: CreateUserRequest, user_service : UserService = Depends(UserService)):
+    return await user_service.create_user(user)
 
 
 @router.put("/{user_id}",response_model=UserResponse,)

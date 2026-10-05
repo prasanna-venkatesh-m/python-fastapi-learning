@@ -1,10 +1,8 @@
-class User:
-    def __init__(
-        self,
-        id: int,
-        name: str,
-        email: str
-    ):
-        self.id = id
-        self.name = name
-        self.email = email
+from pydantic import BaseModel
+from uuid import UUID
+
+
+class User(BaseModel):
+    id: UUID
+    name: str
+    email: str

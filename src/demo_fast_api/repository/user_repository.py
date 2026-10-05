@@ -1,48 +1,67 @@
+from demo_fast_api.database.mongodb import users_collection
 from demo_fast_api.models.user_model import User
 
 
 class UserRepository:
 
-    def __init__(self):
-        self.users: list[User] = []
+    async def get_all_users(self) -> list[User]:
 
-    def get_all_users(self) -> list[User]:
-        return self.users
+        users = []
 
-    def get_user_by_id(self, user_id: int) -> User | None:
-        for user in self.users:
-            if user.id == user_id:
-                return user
+        cursor = users_collection.find()
 
-        return None
+        async for document in cursor:
+            document.pop("_id", None)
+            users.append(User(**document))
 
-    def create_user(self, user: User) -> User:
-        self.users.append(user)
+        return users
+
+    async def get_user_by_id(self, user_id: int) -> User | None:
+
+        document = await users_collection.find_one(
+            {"id": user_id}
+        )
+
+        if document is None:
+            return None
+
+        document.pop("_id", None)
+
+        return User(**document)
+
+    async def create_user(self, user: User) -> User:
+
+        await users_collection.insert_one(
+            user.model_dump()
+        )
+
         return user
 
-    def update_user(
+    async def update_user(
         self,
         user_id: int,
         update_user: User,
     ) -> User | None:
 
-        existing_user = self.get_user_by_id(user_id)
+        result = await users_collection.update_one(
+            {"id": user_id},
+            {
+                "$set": {
+                    "name": update_user.name,
+                    "email": update_user.email,
+                }
+            }
+        )
 
-        if existing_user is None:
+        if result.matched_count == 0:
             return None
 
-        existing_user.name = update_user.name
-        existing_user.email = update_user.email
+        return await self.get_user_by_id(user_id)
 
-        return existing_user
+    async def delete_user(self, user_id: int) -> bool:
 
-    def delete_user(self, user_id: int) -> bool:
+        result = await users_collection.delete_one(
+            {"id": user_id}
+        )
 
-        existing_user = self.get_user_by_id(user_id)
-
-        if existing_user is None:
-            return False
-
-        self.users.remove(existing_user)
-
-        return True
+        return result.deleted_count > 0
