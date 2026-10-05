@@ -2,6 +2,7 @@ from demo_fast_api.repository.user_repository import UserRepository
 from demo_fast_api.dto.user_dto import CreateUserRequest, UpdateUserRequest, UserResponse
 from demo_fast_api.models.user_model import User
 import uuid
+from datetime import datetime, timezone
 
 class UserService:
     def __init__(self):
@@ -34,14 +35,21 @@ class UserService:
         user = User(
             id = uuid.uuid4(),
             name = userData.name,
-            email= userData.email
+            email= userData.email,
+            password=userData.password,
+            role=userData.role,
+            createdBy=userData.createdBy,
+            createdOn= datetime.now(timezone.utc),
+            isActive=True
         )
 
         created_user = await self.userRepository.create_user(user)
         return UserResponse(
             id = created_user.id,
             name = created_user.name,
-            email = created_user.email
+            email = created_user.email,
+            role = created_user.role,
+            isActive= created_user.isActive
         )
 
     def update_user(self, userId: int, update_data: UpdateUserRequest) -> UserResponse | None:
