@@ -36,14 +36,17 @@ class UserService:
             isActive= user.isActive
         )
 
-    async def create_user(self, userData : CreateUserRequest) -> UserResponse | None:
+    async def get_user_by_email(self, email : str) -> User | None:
+        return await self.userRepository.get_user_by_email(email)
+
+    async def create_user(self, userData : CreateUserRequest, createdBy : str) -> UserResponse | None:
         user = User(
             id = uuid.uuid4(),
             name = userData.name,
             email= userData.email,
             password=userData.password,
             role=userData.role,
-            createdBy=userData.createdBy,
+            createdBy=createdBy,
             createdOn= datetime.now(timezone.utc),
             isActive=True
         )

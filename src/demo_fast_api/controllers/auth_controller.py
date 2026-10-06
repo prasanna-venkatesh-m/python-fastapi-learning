@@ -7,5 +7,5 @@ router = APIRouter(
 )
 
 @router.get('/getaccesstoken')
-def get_access_token(username: str, password: str, authService : AuthService = Depends(AuthService)):
-    return authService.get_access_token(username, password)
+async def get_access_token(email: str, password: str, authService : AuthService = Depends(AuthService)):
+    return await authService.get_access_token(email, password)

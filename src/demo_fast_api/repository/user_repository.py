@@ -31,6 +31,19 @@ class UserRepository:
 
         return User(**document)
 
+    async def get_user_by_email(self, email: str) -> User | None:
+
+        document = await users_collection.find_one(
+            {"email": email}
+        )
+
+        if document is None:
+            return None
+
+        document.pop("_id", None)
+
+        return User(**document)
+
     async def create_user(self, user: User) -> User:
 
         await users_collection.insert_one(

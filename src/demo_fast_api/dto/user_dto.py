@@ -8,7 +8,6 @@ class CreateUserRequest(BaseModel):
     email: str
     password : str
     role : str
-    createdBy : str
 
 
 class UpdateUserRequest(BaseModel):

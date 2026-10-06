@@ -22,9 +22,9 @@ async def get_user(user_id: UUID, user_service : UserService = Depends(UserServi
 async def get_my_profile(payload : dict = Depends(authenticate), user_service : UserService = Depends(UserService)):
     return await user_service.get_user_by_id(payload.get("userId"))
 
-@router.post("/",response_model=UserResponse,status_code=status.HTTP_201_CREATED)
+@router.post("/",response_model=UserResponse,status_code=status.HTTP_201_CREATED, dependencies=[Depends(authorize(["ADMIN"]))])
 async def create_user(user: CreateUserRequest, user_service : UserService = Depends(UserService), userData : dict = Depends(authenticate)):
-    return await user_service.create_user(user)
+    return await user_service.create_user(user, userData["userId"])
 
 
 @router.put("/{user_id}",response_model=UserResponse,)
