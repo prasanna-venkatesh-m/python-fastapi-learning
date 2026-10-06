@@ -1,6 +1,8 @@
 from demo_fast_api.database.mongodb import users_collection
+from demo_fast_api.dto.user_dto import UpdateUserRequest
 from demo_fast_api.models.user_model import User
-
+from uuid import UUID
+from datetime import datetime, timezone
 
 class UserRepository:
 
@@ -16,7 +18,7 @@ class UserRepository:
 
         return users
 
-    async def get_user_by_id(self, user_id: int) -> User | None:
+    async def get_user_by_id(self, user_id: UUID) -> User | None:
 
         document = await users_collection.find_one(
             {"id": user_id}
@@ -39,8 +41,9 @@ class UserRepository:
 
     async def update_user(
         self,
-        user_id: int,
-        update_user: User,
+        user_id: UUID,
+        update_user: UpdateUserRequest,
+        updatedBy : str
     ) -> User | None:
 
         result = await users_collection.update_one(
@@ -49,6 +52,9 @@ class UserRepository:
                 "$set": {
                     "name": update_user.name,
                     "email": update_user.email,
+                    "role" : update_user.role,
+                    "modifiedBy" : updatedBy,
+                    "modifiedOn" : datetime.now(timezone.utc)
                 }
             }
         )
@@ -58,7 +64,7 @@ class UserRepository:
 
         return await self.get_user_by_id(user_id)
 
-    async def delete_user(self, user_id: int) -> bool:
+    async def delete_user(self, user_id: UUID) -> bool:
 
         result = await users_collection.delete_one(
             {"id": user_id}

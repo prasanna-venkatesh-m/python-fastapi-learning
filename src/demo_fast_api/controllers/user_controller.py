@@ -2,6 +2,7 @@ from fastapi import APIRouter, status, Depends
 from demo_fast_api.dto.user_dto import (CreateUserRequest,UpdateUserRequest,UserResponse)
 from demo_fast_api.services.user_service import UserService
 from demo_fast_api.utils.dependencies import authenticate, authorize
+from uuid import UUID
 
 router = APIRouter(
     prefix="/users",
@@ -10,27 +11,27 @@ router = APIRouter(
 )
 
 @router.get("/",response_model=list[UserResponse])
-def get_users(user_service : UserService = Depends(UserService)):
-    return user_service.get_users()
+async def get_users(user_service : UserService = Depends(UserService)):
+    return await user_service.get_users()
 
 @router.get("/{user_id}",response_model=UserResponse | None, dependencies=[Depends(authorize(["ADMIN"]))])
-def get_user(user_id: int, user_service : UserService = Depends(UserService)):
-    return user_service.get_user_by_id(user_id)
+async def get_user(user_id: UUID, user_service : UserService = Depends(UserService)):
+    return await user_service.get_user_by_id(user_id)
 
 @router.get("/profile", status_code=status.HTTP_201_CREATED)
-def get_my_profile(payload : dict = Depends(authenticate), user_service : UserService = Depends(UserService)):
-    return user_service.get_user_by_id(payload.get("userId"))
+async def get_my_profile(payload : dict = Depends(authenticate), user_service : UserService = Depends(UserService)):
+    return await user_service.get_user_by_id(payload.get("userId"))
 
 @router.post("/",response_model=UserResponse,status_code=status.HTTP_201_CREATED)
-async def create_user(user: CreateUserRequest, user_service : UserService = Depends(UserService)):
+async def create_user(user: CreateUserRequest, user_service : UserService = Depends(UserService), userData : dict = Depends(authenticate)):
     return await user_service.create_user(user)
 
 
 @router.put("/{user_id}",response_model=UserResponse,)
-def update_user(user_id: int,user: UpdateUserRequest, user_service : UserService = Depends(UserService)):
-    return user_service.update_user(user_id, user)
+async def update_user(user_id: UUID,user: UpdateUserRequest, user_service : UserService = Depends(UserService), userData : dict = Depends(authenticate)):
+    return await user_service.update_user(user_id, user, userData["userId"])
 
 
 @router.delete("/{user_id}",status_code=status.HTTP_200_OK, dependencies=[Depends(authorize(["ADMIN"]))])
-def delete_user(user_id: int, user_service : UserService = Depends(UserService)):
-    return user_service.delete_user(user_id)
+async def delete_user(user_id: UUID, user_service : UserService = Depends(UserService)):
+    return await user_service.delete_user(user_id)

@@ -15,10 +15,7 @@ class UpdateUserRequest(BaseModel):
     id: UUID
     name: str
     email: str
-    password : str
     role : str
-    modifiedBy: str
-    isActive : bool
 
 
 class UserResponse(BaseModel):
