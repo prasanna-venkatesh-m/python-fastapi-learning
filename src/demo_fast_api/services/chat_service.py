@@ -5,9 +5,11 @@ from demo_fast_api.services.file_service import FileService
 from demo_fast_api.llms.llm_client import LLMClient
 from demo_fast_api.services.prompt_service import PromptService
 from demo_fast_api.repository.chat_repository import ChatRepository
+from demo_fast_api.services.chat_message_service import ChatMessageService
 from demo_fast_api.models.chat_model import Chat
 from dotenv import load_dotenv
 import os
+import asyncio
 
 load_dotenv()
 
@@ -17,6 +19,7 @@ class ChatService:
         self.llm_client = LLMClient()
         self.prompt_service = PromptService()
         self.chat_repo = ChatRepository()
+        self.chat_msg_service = ChatMessageService()
 
     async def chat_completion(self, query: ChatCompletionDto, userData : dict, reqId : UUID) -> ChatResponseDto:
         chat_id = None
@@ -38,6 +41,9 @@ class ChatService:
             context=context,
             histories=[]
         )
+
+        asyncio.create_task(self.chat_msg_service.create_user_message(chat_id, reqId, query.user_query, userData["userId"]))
+        asyncio.create_task(self.chat_msg_service.create_agent_message(chat_id, reqId, response.choices[0].message.content ,chunks, userData["userId"]))
 
         return ChatResponseDto(
             chat_id=chat_id,
