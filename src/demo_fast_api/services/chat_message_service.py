@@ -10,7 +10,7 @@ class ChatMessageService:
         return await self.chat_msg_repo.create_chat_message(ChatMessage(
             chat_id=chat_id,
             request_id= req_id,
-            role="USER",
+            role="user",
             content=content,
             createdBy=createdBy
         ))
@@ -19,9 +19,19 @@ class ChatMessageService:
         return await self.chat_msg_repo.create_chat_message(ChatMessage(
             chat_id=chat_id,
             request_id= req_id,
-            role="AGENT",
+            role="assistant",
             content=content,
             context=context,
             is_output_generated=True,
             createdBy=createdBy
         ))
+
+    async def get_chat_histories(self, chat_id : UUID) :
+        msg_histories =  await self.chat_msg_repo.get_chat_histories(chat_id=chat_id)
+        return [
+            {
+                "role" : history.role,
+                "content" : history.content
+            }
+            for history in msg_histories
+        ]

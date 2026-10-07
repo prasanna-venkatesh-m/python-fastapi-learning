@@ -22,10 +22,13 @@ class ChatService:
         self.chat_msg_service = ChatMessageService()
 
     async def chat_completion(self, query: ChatCompletionDto, userData : dict, reqId : UUID) -> ChatResponseDto:
-        chat_id = None
+        chat_id = query.chat_id
+        histories = []
         if query.chat_id is None :
             chat : Chat = await self.chat_repo.create_chat(Chat(createdBy=userData["userId"], summary=query.user_query))
             chat_id = chat.chat_id
+        else:
+            histories = await self.chat_msg_service.get_chat_histories(query.chat_id)
 
         chunks = await self.file_service.search_vectors(query.user_query) 
         context = "\n\n".join(
@@ -39,7 +42,7 @@ class ChatService:
             system_prompt=system_prompt,
             user_query=query.user_query,
             context=context,
-            histories=[]
+            histories=histories
         )
 
         asyncio.create_task(self.chat_msg_service.create_user_message(chat_id, reqId, query.user_query, userData["userId"]))
