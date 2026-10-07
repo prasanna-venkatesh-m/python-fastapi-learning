@@ -33,7 +33,5 @@ class ChatService:
 
         return ChatResponseDto(
             chat_id=query.chat_id,
-            chat_response=response.choices[0].message.content,
-            attachments=["test"],
-            sources=["vector"]
+            chat_response=response.choices[0].message.content
         )
