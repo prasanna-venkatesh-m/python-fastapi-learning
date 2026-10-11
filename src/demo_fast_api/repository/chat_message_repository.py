@@ -14,7 +14,7 @@ class ChatMessageRepository:
 
         cursor = chat_message_collection.find({
             "chat_id": chat_id
-        })
+        }).sort("createdOn", 1)
 
         async for document in cursor:
             document.pop("_id", None)
