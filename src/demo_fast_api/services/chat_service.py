@@ -36,8 +36,6 @@ class ChatService:
             for chunk in chunks
         )
 
-        content = response.choices[0].message.content
-
         response = await self.llm_client.generate(
             model = "openai/gpt-oss-120b",
             system_prompt=self.prompt_service.get_chat_prompt(os.getenv("CHAT_PROMPT_VERSION")),
@@ -45,6 +43,8 @@ class ChatService:
             context=context,
             histories=histories
         )
+        
+        content = response.choices[0].message.content
 
         asyncio.create_task(self.chat_msg_service.create_user_message(chat_id, reqId, query.user_query, userData["userId"]))
         asyncio.create_task(self.chat_msg_service.create_agent_message(chat_id, reqId, content ,chunks, userData["userId"]))
