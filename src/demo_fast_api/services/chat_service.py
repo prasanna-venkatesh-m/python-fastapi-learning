@@ -22,6 +22,9 @@ class ChatService:
         self.chat_msg_service = ChatMessageService()
 
     async def chat_completion(self, query: ChatCompletionDto, userData : dict, reqId : UUID) -> ChatResponseDto:
+        # Guardrails
+        # if hits Guardrails means return I can't help you with that
+        
         chat_id = query.chat_id
         
         if query.chat_id is None :
