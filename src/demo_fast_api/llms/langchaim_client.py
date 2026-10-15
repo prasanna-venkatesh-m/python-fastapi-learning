@@ -1,6 +1,7 @@
 import os
 
 from langchain_openai import ChatOpenAI
+from groq import AsyncGroq
 from langchain_core.messages import AIMessage, HumanMessage, BaseMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
