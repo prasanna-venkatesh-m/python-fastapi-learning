@@ -26,6 +26,7 @@ class ChatService:
         # if hits Guardrails means return I can't help you with that
         
         chat_id = query.chat_id
+        histories = []
         
         if query.chat_id is None :
             chat : Chat = await self.chat_repo.create_chat(Chat(createdBy=userData["userId"], summary=query.user_query))
@@ -59,6 +60,7 @@ class ChatService:
 
     async def generate(self, query: ChatCompletionDto, userData : dict, reqId : UUID) -> ChatResponseDto:
             chat_id = query.chat_id
+            histories = []
             
             if query.chat_id is None :
                 chat : Chat = await self.chat_repo.create_chat(Chat(createdBy=userData["userId"], summary=query.user_query))
@@ -72,7 +74,7 @@ class ChatService:
                 for chunk in chunks
             )
     
-            response = self.llm_client.generate(
+            response = await self.llm_client.generate(
                 model = "openai/gpt-oss-120b",
                 system_prompt=self.prompt_service.get_chat_prompt(os.getenv("CHAT_PROMPT_VERSION")),
                 user_query=query.user_query,
