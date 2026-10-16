@@ -56,3 +56,36 @@ class ChatService:
             chat_id=chat_id,
             chat_response=content
         )
+
+    async def generate(self, query: ChatCompletionDto, userData : dict, reqId : UUID) -> ChatResponseDto:
+            chat_id = query.chat_id
+            
+            if query.chat_id is None :
+                chat : Chat = await self.chat_repo.create_chat(Chat(createdBy=userData["userId"], summary=query.user_query))
+                chat_id = chat.chat_id
+            else:
+                histories = await self.chat_msg_service.get_chat_histories(query.chat_id)
+    
+            chunks = await self.file_service.search_vectors(query.user_query) 
+            context = "\n\n".join(
+                chunk["metadata"]["text"]
+                for chunk in chunks
+            )
+    
+            response = self.llm_client.generate(
+                model = "openai/gpt-oss-120b",
+                system_prompt=self.prompt_service.get_chat_prompt(os.getenv("CHAT_PROMPT_VERSION")),
+                user_query=query.user_query,
+                context=context,
+                histories=histories
+            )
+            
+            content = response.choices[0].message.content
+    
+            asyncio.create_task(self.chat_msg_service.create_user_message(chat_id, reqId, query.user_query, userData["userId"]))
+            asyncio.create_task(self.chat_msg_service.create_agent_message(chat_id, reqId, content ,chunks, userData["userId"]))
+    
+            return ChatResponseDto(
+                chat_id=chat_id,
+                chat_response=content
+            )
