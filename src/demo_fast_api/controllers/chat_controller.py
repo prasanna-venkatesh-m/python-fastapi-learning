@@ -17,4 +17,4 @@ async def get_chat_completion(
     chat_service : ChatService = Depends(ChatService),
     userData : dict = Depends(authenticate)):
     reqId = uuid.uuid4()
-    return await chat_service.chat_completion(query, userData, reqId)
+    return await chat_service.generate(query, userData, reqId)
