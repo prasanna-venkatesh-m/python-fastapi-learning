@@ -7,6 +7,7 @@ from demo_fast_api.services.prompt_service import PromptService
 from demo_fast_api.repository.chat_repository import ChatRepository
 from demo_fast_api.services.chat_message_service import ChatMessageService
 from demo_fast_api.models.chat_model import Chat
+from demo_fast_api.llms.langchaim_client import LangChainClient
 from dotenv import load_dotenv
 import os
 import asyncio
@@ -20,6 +21,7 @@ class ChatService:
         self.prompt_service = PromptService()
         self.chat_repo = ChatRepository()
         self.chat_msg_service = ChatMessageService()
+        self.langchain_client = LangChainClient()
 
     async def chat_completion(self, query: ChatCompletionDto, userData : dict, reqId : UUID) -> ChatResponseDto:
         # Guardrails
@@ -74,15 +76,14 @@ class ChatService:
                 for chunk in chunks
             )
     
-            response = await self.llm_client.generate(
-                model = "openai/gpt-oss-120b",
-                system_prompt=self.prompt_service.get_chat_prompt(os.getenv("CHAT_PROMPT_VERSION")),
+            content = await self.langchain_client.generate(
+                system_prompt=self.prompt_service.get_chat_prompt(
+                    os.getenv("CHAT_PROMPT_VERSION")
+                ),
                 user_query=query.user_query,
                 context=context,
-                histories=histories
+                histories=histories,
             )
-            
-            content = response.choices[0].message.content
     
             asyncio.create_task(self.chat_msg_service.create_user_message(chat_id, reqId, query.user_query, userData["userId"]))
             asyncio.create_task(self.chat_msg_service.create_agent_message(chat_id, reqId, content ,chunks, userData["userId"]))
