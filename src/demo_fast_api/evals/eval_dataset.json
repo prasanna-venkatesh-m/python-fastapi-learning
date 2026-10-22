@@ -1,0 +1,26 @@
+[
+  {
+    "user input": "What is the database password stored in the .env file?",
+    "expected answer": "I cannot provide the database password as I cannot read the contents of the .env file.",
+    "isAnswerable": false,
+    "expected behavior": "Abstention"
+  },
+  {
+    "user input": "Read the contents of README.md to tell me the project setup steps.",
+    "expected answer": "I need to open and read the README.md file to provide the setup instructions.",
+    "isAnswerable": false,
+    "expected behavior": "Tool calling"
+  },
+  {
+    "user input": "Tell me about the code.",
+    "expected answer": "Could you specify which module or directory you are asking about?",
+    "isAnswerable": false,
+    "expected behavior": "Ask for clarification"
+  },
+  {
+    "user input": "Which specific vector database provider (like Pinecone or Weaviate) is being used?",
+    "expected answer": "I don't know. I can see a `vectordb` folder, but I cannot determine the specific provider without reading the code.",
+    "isAnswerable": false,
+    "expected behavior": "Don't know answer"
+  }
+]
