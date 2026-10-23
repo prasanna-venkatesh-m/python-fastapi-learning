@@ -72,6 +72,10 @@ class FileService:
         self.vector_db.insert_vectors(vectors=vectors)
         return True
 
+    async def delete_by_filename(self,fileType : FileType) -> bool:
+        self.vector_db.delete_namespace(fileType=fileType.name)
+        return True
+
     async def search_vectors(self, query: str):
         embeddings = self.embedding_model.encode(
                     query,
