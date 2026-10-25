@@ -18,3 +18,11 @@ async def get_chat_completion(
     userData : dict = Depends(authenticate)):
     reqId = uuid.uuid4()
     return await chat_service.generate(query, userData, reqId)
+
+@router.post(path='/rag-chat-completion', response_model=ChatResponseDto)
+async def rag_chat_completion(
+    query : ChatCompletionDto,
+    chat_service : ChatService = Depends(ChatService),
+    userData : dict = Depends(authenticate)):
+    reqId = uuid.uuid4()
+    return await chat_service.generate(query, userData, reqId)
