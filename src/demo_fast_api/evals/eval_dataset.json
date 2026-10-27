@@ -1,26 +1,182 @@
 [
   {
-    "user input": "What is the database password stored in the .env file?",
-    "expected answer": "I cannot provide the database password as I cannot read the contents of the .env file.",
+    "user input": "What is Batman's current professional title?",
+    "expected answer": "Batman identifies his current professional title as Senior Software Engineer.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "How many years of professional experience does Batman have?",
+    "expected answer": "Batman reports having between three and five years of professional experience.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "Where is Batman from?",
+    "expected answer": "Batman is from Chennai, Tamil Nadu, India.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "Which degree did Batman complete for his undergraduate education?",
+    "expected answer": "Batman completed a Bachelor of Computer Applications (BCA).",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "Which college did Batman attend for his BCA?",
+    "expected answer": "Batman completed his BCA at Thiruthangal Nadar College.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "Where is Batman pursuing his MCA?",
+    "expected answer": "Batman is pursuing his Master of Computer Applications (MCA) at the University of Madras.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "Has Batman completed his MCA?",
+    "expected answer": "No. His MCA at the University of Madras is currently in progress.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "List all the technologies Batman has explicitly mentioned.",
+    "expected answer": "React, Flutter, .NET, Node.js APIs, Python, SQL, MongoDB, Azure DevOps, and Next.js.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "Which frontend technologies has Batman listed?",
+    "expected answer": "Batman has listed React and Next.js as frontend technologies.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "Which mobile development framework has Batman listed?",
+    "expected answer": "Batman has listed Flutter for mobile development.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "Which backend technologies has Batman mentioned?",
+    "expected answer": "Batman has mentioned .NET, Node.js APIs, and Python as backend technologies.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "Which database technologies has Batman listed?",
+    "expected answer": "Batman has listed SQL and MongoDB.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "Which development operations platform does Batman use or know?",
+    "expected answer": "Batman has listed Azure DevOps. The knowledge base does not specify his exact proficiency or the particular workflows he uses with it.",
+    "isAnswerable": true,
+    "expected behavior": "Answer with qualification"
+  },
+  {
+    "user input": "What are Batman's self-reported professional strengths?",
+    "expected answer": "Batman identifies thinking, problem-solving, logical thinking, analytical thinking, scenario-based reasoning, and multitasking as his professional strengths.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "What languages can Batman speak or understand?",
+    "expected answer": "Batman speaks Tamil and English. He understands Hindi and can speak it at a basic level.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "What is Batman's zodiac sign?",
+    "expected answer": "Batman identifies his zodiac sign as Gemini.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "What kind of AI project is Batman currently working on?",
+    "expected answer": "Batman reports that he is working on building a Retrieval-Augmented Generation (RAG) system and a personalized knowledge base about himself.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "Why does Batman want to build a personal knowledge base for an LLM?",
+    "expected answer": "He wants to provide an LLM with personal information it would not otherwise know, allowing it to answer questions grounded in his own data.",
+    "isAnswerable": true,
+    "expected behavior": "Answer"
+  },
+  {
+    "user input": "What is the name of Batman's current employer?",
+    "expected answer": "The employer's name has not been provided in the knowledge base.",
     "isAnswerable": false,
     "expected behavior": "Abstention"
   },
   {
-    "user input": "Read the contents of README.md to tell me the project setup steps.",
-    "expected answer": "I need to open and read the README.md file to provide the setup instructions.",
-    "isAnswerable": false,
-    "expected behavior": "Tool calling"
-  },
-  {
-    "user input": "Tell me about the code.",
-    "expected answer": "Could you specify which module or directory you are asking about?",
-    "isAnswerable": false,
-    "expected behavior": "Ask for clarification"
-  },
-  {
-    "user input": "Which specific vector database provider (like Pinecone or Weaviate) is being used?",
-    "expected answer": "I don't know. I can see a `vectordb` folder, but I cannot determine the specific provider without reading the code.",
+    "user input": "What is Batman's exact date of birth?",
+    "expected answer": "Batman's date of birth has not been provided in the knowledge base.",
     "isAnswerable": false,
     "expected behavior": "Don't know answer"
+  },
+  {
+    "user input": "What is Batman's age?",
+    "expected answer": "Batman's age has not been documented in the knowledge base.",
+    "isAnswerable": false,
+    "expected behavior": "Abstention"
+  },
+  {
+    "user input": "Which vector database provider does Batman use for his RAG application?",
+    "expected answer": "The specific vector database provider has not been documented.",
+    "isAnswerable": false,
+    "expected behavior": "Don't know answer"
+  },
+  {
+    "user input": "Which embedding model does Batman use?",
+    "expected answer": "The embedding model used in Batman's RAG application has not been specified.",
+    "isAnswerable": false,
+    "expected behavior": "Abstention"
+  },
+  {
+    "user input": "Which LLM powers Batman's RAG application?",
+    "expected answer": "The LLM used in Batman's RAG application has not been identified in the knowledge base.",
+    "isAnswerable": false,
+    "expected behavior": "Don't know answer"
+  },
+  {
+    "user input": "Is Batman an expert in Python?",
+    "expected answer": "Batman has listed Python as one of his technologies, but his proficiency level has not been established.",
+    "isAnswerable": false,
+    "expected behavior": "Abstention"
+  },
+  {
+    "user input": "Name three projects Batman has built and explain their technical architectures.",
+    "expected answer": "Batman reports having built many projects, but their names, technical stacks, and architectural details have not been documented.",
+    "isAnswerable": false,
+    "expected behavior": "Abstention"
+  },
+  {
+    "user input": "What is Batman's biggest professional achievement?",
+    "expected answer": "The knowledge base does not contain a documented professional achievement that can be identified as his biggest.",
+    "isAnswerable": false,
+    "expected behavior": "Don't know answer"
+  },
+  {
+    "user input": "What is Batman's long-term career goal?",
+    "expected answer": "Batman's long-term career goals have not yet been provided.",
+    "isAnswerable": false,
+    "expected behavior": "Abstention"
+  },
+  {
+    "user input": "Tell me about Batman.",
+    "expected answer": "Batman is a Senior Software Engineer with a reported three to five years of experience, a BCA graduate pursuing an MCA, and an interest in software engineering and AI. He is from Chennai and has listed technologies spanning frontend, mobile, backend, databases, and development tooling.",
+    "isAnswerable": true,
+    "expected behavior": "Answer with summary"
+  },
+  {
+    "user input": "Tell me about the project.",
+    "expected answer": "Could you clarify which project you mean: Batman's RAG system or one of his other software projects?",
+    "isAnswerable": false,
+    "expected behavior": "Ask for clarification"
   }
 ]

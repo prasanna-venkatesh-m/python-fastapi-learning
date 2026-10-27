@@ -46,6 +46,68 @@ async def evaluation_service(
         "response": evaluation.model_dump(by_alias=True),
     }
 
+def summarize_results(result_ds: list[dict[str, Any]]) -> None:
+    total = len(result_ds)
+
+    passed_items = [
+        item for item in result_ds
+        if item.get("evaluation", {}).get("pass", False)
+    ]
+
+    failed_items = [
+        item for item in result_ds
+        if not item.get("evaluation", {}).get("pass", False)
+    ]
+
+    passed = len(passed_items)
+    failed = len(failed_items)
+    pass_percentage = (passed / total * 100) if total else 0.0
+
+    print(
+        f"Overall Evaluation: {passed}/{total} passed "
+        f"({pass_percentage:.2f}%) | Failed: {failed}/{total}"
+    )
+
+    if failed_items:
+        print("\nFailed Cases:")
+
+        for index, item in enumerate(failed_items, start=1):
+            evaluation = item.get("evaluation", {})
+
+            print(f"\n--- Failed Case {index} ---")
+            print(f"Query: {item.get('user input', 'N/A')}")
+            print(f"Expected Answer: {item.get('expected answer', 'N/A')}")
+            print(f"Expected Behavior: {item.get('expected behavior', 'N/A')}")
+            print(f"Actual Response: {item.get('response', 'N/A')}")
+            print(f"Overall Assessment: {evaluation.get('overall_assessment', 'N/A')}")
+            print(f"Total Score: {evaluation.get('total_score', 'N/A')}/{evaluation.get('max_score', 'N/A')}")
+
+            failure_reasons = evaluation.get("failure_reasons", [])
+
+            if failure_reasons:
+                print("Failure Reasons:")
+                for reason in failure_reasons:
+                    print(f"- {reason}")
+
+            # Print individual metric scores and reasons
+            for metric in (
+                "correctness",
+                "groundedness",
+                "relevance",
+                "completeness",
+                "abstention_quality",
+                "fairness_bias",
+                "safety_policy_compliance",
+                "instruction_compliance",
+            ):
+                metric_result = evaluation.get(metric)
+
+                if isinstance(metric_result, dict):
+                    print(
+                        f"{metric}: "
+                        f"{metric_result.get('score', 'N/A')} - "
+                        f"{metric_result.get('reason', 'N/A')}"
+                    )
 # ============================================================
 # 8. MAIN 
 # ============================================================
@@ -84,7 +146,7 @@ async def main() -> None:
         with output_path.open("w", encoding="utf-8") as file:
             json.dump(result_ds, file, indent=4, ensure_ascii=False)
 
-        print(json.dumps(result_ds, indent=4, ensure_ascii=False))
+        summarize_results(result_ds)
 
     except FileNotFoundError:
         print(f"File not found: {file_path}")
