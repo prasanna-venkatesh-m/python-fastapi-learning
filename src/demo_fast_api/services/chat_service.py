@@ -94,7 +94,7 @@ class ChatService:
             )
 
     async def evalution_completion(self, query: str) -> dict:
-        chunks = await self.file_service.search_vectors(query.user_query)
+        chunks = await self.file_service.search_vectors(query)
 
         context = "\n\n".join(
             chunk["metadata"]["text"]
@@ -106,7 +106,7 @@ class ChatService:
             system_prompt=self.prompt_service.get_chat_prompt(
                 os.getenv("CHAT_PROMPT_VERSION")
             ),
-            user_query=query.user_query,
+            user_query=query,
             context=context,
             histories=[]
         )
