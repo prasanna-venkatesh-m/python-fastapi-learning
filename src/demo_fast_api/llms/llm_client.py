@@ -13,7 +13,9 @@ class LLMClient:
         system_prompt: str, 
         user_query: str, 
         context: str, 
-        histories : list[dict]):
+        histories : list[dict],
+        response_format = None,
+        ):
 
         messages = [
             {
@@ -33,10 +35,22 @@ class LLMClient:
             }
         ]
 
-        response = await groq_client.chat.completions.create(
-            model = model,
-            messages=messages
-        )
+        kwargs = {
+        "model": model,
+        "messages": messages,
+        }
+
+        if response_format is not None:
+            kwargs["response_format"] = {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "evaluation_result",
+                    "schema": response_format.model_json_schema(),
+                    "strict": False,
+                },
+            }
+
+        response = await groq_client.chat.completions.create(**kwargs)
 
         return response
     

@@ -9,6 +9,7 @@ from typing import Any
 from demo_fast_api.services.chat_service import ChatService
 from demo_fast_api.services.prompt_service import PromptService
 from demo_fast_api.llms.llm_client import LLMClient
+from demo_fast_api.dto.evals.eval_dto import EvaluationResult
 from dotenv import load_dotenv
 from groq import Groq
 import copy
@@ -36,10 +37,13 @@ async def evaluation_service(
         user_query=query,
         context=json.dumps(context, ensure_ascii=False),
         histories=[],
+        response_format=EvaluationResult
     )
+    content = output.choices[0].message.content
+    evaluation = EvaluationResult.model_validate_json(content)
 
     return {
-        "response": output.choices[0].message.content
+        "response": evaluation.model_dump(by_alias=True),
     }
 
 # ============================================================
