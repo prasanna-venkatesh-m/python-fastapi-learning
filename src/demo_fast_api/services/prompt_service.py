@@ -18,3 +18,15 @@ class PromptService:
 
         return prompts_path.read_text(encoding="utf-8")
 
+    def get_evalution_prompt(self, version: str) -> str:
+        prompts_path =  (
+            self.prompts_path
+            / "eval"
+            / f"{version}.txt"
+        )
+
+        if not prompts_path.exists:
+            raise FileNotFoundError(f"Chat prompt not found : {version}")
+
+        return prompts_path.read_text(encoding="utf-8")
+
